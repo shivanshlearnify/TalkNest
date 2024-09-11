@@ -10,7 +10,7 @@ import React, { memo } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from '@mui/icons-material/Remove';
 
-const UserItem = ({ user, handler, handlerIsLoading, isAdded=false }) => {
+const UserItem = ({ user, handler, handlerIsLoading, isAdded=false, styling={}}) => {
   
   const { name, _id, avatar } = user;
   return (
@@ -20,6 +20,7 @@ const UserItem = ({ user, handler, handlerIsLoading, isAdded=false }) => {
         alignItems={"center"}
         spacing={"1rem"}
         width={"100%"}
+        {...styling}
       >
         <Avatar />
         <Typography

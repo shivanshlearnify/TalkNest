@@ -17,10 +17,11 @@ import React, { lazy, memo, Suspense, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AvatarCard from "../components/shared/AvatarCard";
 import { Link } from "../components/styles/StyledComponents";
-import { matBlack } from "../constants/color";
-import { sampleChats } from "../constants/sampledata";
+import { bgGradient, matBlack } from "../constants/color";
+import { sampleChats, sampleUsers } from "../constants/sampledata";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
+import UserItem from "../components/shared/UserItem";
 
 const ConfirmDeleteDialog = lazy(() =>
   import("../components/dialogs/ConfirmDeleteDialog")
@@ -29,7 +30,7 @@ const AddMemberDialog = lazy(() =>
   import("../components/dialogs/AddMemberDialog")
 );
 
-const isAddMember = true;
+const isAddMember = false;
 
 const Group = () => {
   const chatId = useSearchParams()[0].get("group");
@@ -72,10 +73,15 @@ const Group = () => {
     console.log("done");
     closeConfirmDeleteHandler();
   };
+  const removeMemberHandler = (id) => {
+    console.log("done", id);
+  };
 
   useEffect(() => {
-    setGroupName(`Group Name ${chatId}`);
-    setGroupNameUpdatedValue(`Group Name ${chatId}`);
+    if (chatId) {
+      setGroupName(`Group Name ${chatId}`);
+      setGroupNameUpdatedValue(`Group Name ${chatId}`);
+    }
 
     return () => {
       setGroupName("");
@@ -221,11 +227,23 @@ const Group = () => {
                 md: "1rem 4rem",
               }}
               spacing={"2rem"}
-              bgcolor={"bisque"}
               height={"50vh"}
               overflow={"auto"}
             >
               {/* members */}
+              {sampleUsers.map((i) => (
+                <UserItem
+                  key={i._id}
+                  user={i}
+                  isAdded
+                  styling={{
+                    boxShadow: "0 0 0.5rem  rgba(0,0,0,0.2)",
+                    padding: "1rem 2rem",
+                    borderRadius: "1rem",
+                  }}
+                  handler={removeMemberHandler}
+                />
+              ))}
             </Stack>
             {ButtonGroup}
           </>
@@ -264,7 +282,13 @@ const Group = () => {
 };
 
 const GropuList = ({ w = "100%", myGropus = [], chatId }) => (
-  <Stack width={w}>
+  <Stack
+    width={w} overflow={"auto"} height={"100%"}
+    sx={{
+      backgroundImage: bgGradient,
+      height:"100vh",
+    }}
+  >
     {myGropus.length > 0 ? (
       myGropus.map((group) => (
         <GropuListItem key={group._id} group={group} chatId={chatId} />
